@@ -1,9 +1,10 @@
 package org.gabriel.carrosapi.domain.service
 
+import org.gabriel.carrosapi.domain.dto.CarroDTO
 import org.gabriel.carrosapi.domain.model.Carro
 import org.gabriel.carrosapi.domain.repository.CarroRepository
+import org.modelmapper.ModelMapper
 import org.springframework.stereotype.Service
-import java.lang.IllegalStateException
 import java.util.*
 import javax.persistence.EntityNotFoundException
 
@@ -12,20 +13,37 @@ import javax.persistence.EntityNotFoundException
  * @author daohn on 31/01/2021
  */
 @Service
-class CarroService(private val repository: CarroRepository) {
+class CarroService(private val repository: CarroRepository, private val modelMapper: ModelMapper) {
 
-  fun findAll(): List<Carro> = repository.findAll()
+  fun findAll(): List<CarroDTO> = repository.findAll().map {
+    modelMapper.map(
+      it, CarroDTO::class.java
+    )
+  }
 
-  fun findById(id: Long): Optional<Carro> = repository.findById(id)
+  fun findById(id: Long): Optional<CarroDTO> = repository.findById(id).map {
+    modelMapper.map(
+      it,
+      CarroDTO::class.java
+    )
+  }
 
-  fun findByTipo(tipo: String): List<Carro> = repository.findByTipo(tipo)
 
-  fun save(carro: Carro): Carro = repository.save(carro)
+  fun findByTipo(tipo: String): List<CarroDTO> = repository.findByTipo(tipo).map {
+    modelMapper.map(
+      it, CarroDTO::class.java
+    )
+  }
 
-  fun update(id: Long?, carro: Carro): Carro {
+  fun save(carro: Carro): CarroDTO {
+    repository.save(carro)
+    return modelMapper.map(carro, CarroDTO::class.java)
+  }
+
+  fun update(id: Long?, carro: Carro): CarroDTO {
     if (id == null) throw IllegalStateException("Não foi possível atualizar o registro")
 
-    val target = findById(id).map {
+    val target = repository.findById(id).map {
       it.id = id
       it.nome = carro.nome
       it.tipo = carro.tipo
@@ -33,7 +51,9 @@ class CarroService(private val repository: CarroRepository) {
       return@map it
     }.orElseThrow { EntityNotFoundException("O carro não foi encontrado") }
 
-    return repository.save(target)
+    repository.save(target)
+
+    return modelMapper.map(target, CarroDTO::class.java)
   }
 
   fun delete(id: Long) {

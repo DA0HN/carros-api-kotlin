@@ -1,5 +1,6 @@
 package org.gabriel.carrosapi.api
 
+import org.gabriel.carrosapi.domain.dto.CarroDTO
 import org.gabriel.carrosapi.domain.model.Carro
 import org.gabriel.carrosapi.domain.service.CarroService
 import org.springframework.http.HttpStatus
@@ -16,20 +17,19 @@ import java.util.*
 class CarroController(val service: CarroService) {
 
   @GetMapping
-  fun findAll(): ResponseEntity<List<Carro>> {
+  fun findAll(): ResponseEntity<List<CarroDTO>> {
     return ResponseEntity.ok(service.findAll())
   }
 
   @GetMapping("/{id}")
-  fun findById(@PathVariable("id") id: Long): ResponseEntity<Carro> {
+  fun findById(@PathVariable("id") id: Long): ResponseEntity<CarroDTO> {
     val carro = service.findById(id)
 
-    return carro.map { return@map ResponseEntity.ok(it) }
-      .orElse(ResponseEntity.notFound().build())
+    return carro.map { ResponseEntity.ok(it) }.orElse(ResponseEntity.notFound().build())
   }
 
   @GetMapping("/tipo/{tipo}")
-  fun findByTipo(@PathVariable("tipo") tipo: String): ResponseEntity<List<Carro>> {
+  fun findByTipo(@PathVariable("tipo") tipo: String): ResponseEntity<List<CarroDTO>> {
     val carros = service.findByTipo(tipo)
 
     return if (carros.isEmpty()) ResponseEntity.noContent().build() else ResponseEntity.ok(carros)
