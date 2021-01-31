@@ -13,7 +13,7 @@ import javax.persistence.Id
 data class Carro(
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  var id: Long,
+  var id: Long?,
   var nome: String,
   var tipo: String,
 )

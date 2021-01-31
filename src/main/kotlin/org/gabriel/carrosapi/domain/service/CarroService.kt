@@ -36,6 +36,7 @@ class CarroService(private val repository: CarroRepository, private val modelMap
   }
 
   fun save(carro: Carro): CarroDTO {
+    if(carro.id != null) throw IllegalStateException("Não foi possível salvar o registro")
     repository.save(carro)
     return modelMapper.map(carro, CarroDTO::class.java)
   }

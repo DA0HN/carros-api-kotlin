@@ -3,10 +3,10 @@ package org.gabriel.carrosapi.api
 import org.gabriel.carrosapi.domain.dto.CarroDTO
 import org.gabriel.carrosapi.domain.model.Carro
 import org.gabriel.carrosapi.domain.service.CarroService
-import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
-import java.util.*
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder
+import java.net.URI
 
 /**
  * @project carros-api-kt
@@ -36,12 +36,27 @@ class CarroController(val service: CarroService) {
   }
 
   @PostMapping
-  fun save(@RequestBody carro: Carro) = service.save(carro)
+  fun save(@RequestBody carro: Carro): ResponseEntity<CarroDTO> {
+    return try {
+      val carroDTO = service.save(carro)
+      val location = uri(carroDTO.id)
+      ResponseEntity.created(location).build()
+    } catch (ex: Exception) {
+      ResponseEntity.badRequest().build()
+    }
+  }
 
   @PutMapping("/{id}")
   fun update(@PathVariable id: Long, @RequestBody carro: Carro) = service.update(id, carro)
 
   @DeleteMapping("/{id}")
   fun delete(@PathVariable id: Long) = service.delete(id)
+
+  private fun uri(id: Long): URI = ServletUriComponentsBuilder
+    .fromCurrentRequest()
+    .path("/{id}")
+    .buildAndExpand(id)
+    .toUri()
+
 
 }
