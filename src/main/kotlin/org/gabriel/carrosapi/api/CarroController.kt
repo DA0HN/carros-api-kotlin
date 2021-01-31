@@ -18,7 +18,7 @@ class CarroController(val service: CarroService) {
 
   @GetMapping("/{id}")
   fun findById(@PathVariable("id") id: Long): Optional<Carro> {
-    return service.getCarroById(id)
+    return service.findById(id)
   }
 
   @GetMapping("/tipo/{tipo}")
@@ -29,5 +29,8 @@ class CarroController(val service: CarroService) {
 
   @PutMapping("/{id}")
   fun update(@PathVariable id: Long, @RequestBody carro: Carro) = service.update(id, carro)
+
+  @DeleteMapping("/{id}")
+  fun delete(@PathVariable id: Long) = service.delete(id)
 
 }

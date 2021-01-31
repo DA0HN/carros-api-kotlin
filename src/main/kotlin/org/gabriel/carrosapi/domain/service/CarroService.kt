@@ -36,4 +36,12 @@ class CarroService(private val repository: CarroRepository) {
     return repository.save(target)
   }
 
+  fun delete(id: Long) {
+    if (repository.existsById(id)) {
+      repository.deleteById(id)
+    } else {
+      throw EntityNotFoundException("O carro de id $id não existe")
+    }
+  }
+
 }
