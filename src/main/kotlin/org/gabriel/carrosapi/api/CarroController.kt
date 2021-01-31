@@ -17,7 +17,7 @@ import java.util.*
 class CarroController(val service: CarroService) {
 
   @GetMapping
-  fun get() = service.getCarros()
+  fun findAll(): List<Carro> = service.findAll()
 
   @GetMapping("/{id}")
   fun findById(@PathVariable id: Long): Optional<Carro> {

@@ -12,7 +12,7 @@ import java.util.*
 @Service
 class CarroService(val repository: CarroRepository){
 
-  fun getCarros() = repository.findAll()
+  fun findAll(): List<Carro> = repository.findAll()
 
   fun getCarroById(id: Long): Optional<Carro> {
     return repository.findById(id)
