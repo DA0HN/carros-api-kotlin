@@ -27,4 +27,7 @@ class CarroController(val service: CarroService) {
   @PostMapping
   fun save(@RequestBody carro: Carro) = service.save(carro)
 
+  @PutMapping("/{id}")
+  fun update(@PathVariable id: Long, @RequestBody carro: Carro) = service.update(id, carro)
+
 }
