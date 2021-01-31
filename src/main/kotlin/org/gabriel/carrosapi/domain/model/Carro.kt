@@ -15,4 +15,5 @@ data class Carro(
   @GeneratedValue(strategy = GenerationType.SEQUENCE)
   val id: Long,
   val nome: String,
+  val tipo: String,
 )

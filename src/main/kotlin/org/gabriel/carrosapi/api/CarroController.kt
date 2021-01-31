@@ -20,8 +20,11 @@ class CarroController(val service: CarroService) {
   fun findAll(): List<Carro> = service.findAll()
 
   @GetMapping("/{id}")
-  fun findById(@PathVariable id: Long): Optional<Carro> {
+  fun findById(@PathVariable("id") id: Long): Optional<Carro> {
     return service.getCarroById(id)
   }
+
+  @GetMapping("/tipo/{tipo}")
+  fun findByTipo(@PathVariable("tipo") tipo: String): MutableList<Carro> = service.findByTipo(tipo)
 
 }
