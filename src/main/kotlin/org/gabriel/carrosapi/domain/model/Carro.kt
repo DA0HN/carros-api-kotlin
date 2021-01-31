@@ -12,7 +12,7 @@ import javax.persistence.Id
 @Entity
 data class Carro(
   @Id
-  @GeneratedValue(strategy = GenerationType.SEQUENCE)
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   val id: Long,
   val nome: String,
   val tipo: String,
