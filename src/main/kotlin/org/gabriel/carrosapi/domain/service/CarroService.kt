@@ -18,7 +18,7 @@ class CarroService(private val repository: CarroRepository) {
 
   fun findById(id: Long): Optional<Carro> = repository.findById(id)
 
-  fun findByTipo(tipo: String): MutableList<Carro> = repository.findByTipo(tipo)
+  fun findByTipo(tipo: String): List<Carro> = repository.findByTipo(tipo)
 
   fun save(carro: Carro): Carro = repository.save(carro)
 
