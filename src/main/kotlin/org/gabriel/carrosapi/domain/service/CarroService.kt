@@ -16,7 +16,7 @@ class CarroService(private val repository: CarroRepository) {
 
   fun findAll(): List<Carro> = repository.findAll()
 
-  fun getCarroById(id: Long): Optional<Carro> = repository.findById(id)
+  fun findById(id: Long): Optional<Carro> = repository.findById(id)
 
   fun findByTipo(tipo: String): MutableList<Carro> = repository.findByTipo(tipo)
 
@@ -25,7 +25,7 @@ class CarroService(private val repository: CarroRepository) {
   fun update(id: Long?, carro: Carro): Carro {
     if (id == null) throw IllegalStateException("Não foi possível atualizar o registro")
 
-    val target = getCarroById(id).map {
+    val target = findById(id).map {
       it.id = id
       it.nome = carro.nome
       it.tipo = carro.tipo
