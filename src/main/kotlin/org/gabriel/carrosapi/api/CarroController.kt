@@ -6,6 +6,7 @@ import org.gabriel.carrosapi.domain.service.CarroService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder
+import org.springframework.web.util.UriComponentsBuilder
 import java.net.URI
 
 /**
@@ -36,11 +37,14 @@ class CarroController(val service: CarroService) {
   }
 
   @PostMapping
-  fun save(@RequestBody carro: Carro): ResponseEntity<CarroDTO> {
+  fun save(
+    @RequestBody carro: Carro,
+    uriComponentsBuilder: UriComponentsBuilder
+  ): ResponseEntity<CarroDTO> {
     return try {
       val carroDTO = service.save(carro)
-      val location = uri(carroDTO.id)
-      ResponseEntity.created(location).build()
+      val uri = uriComponentsBuilder.path("api/v1/carros/{id}").buildAndExpand(carroDTO.id).toUri()
+      ResponseEntity.created(uri).body(carroDTO)
     } catch (ex: Exception) {
       ResponseEntity.badRequest().build()
     }
@@ -51,12 +55,4 @@ class CarroController(val service: CarroService) {
 
   @DeleteMapping("/{id}")
   fun delete(@PathVariable id: Long) = service.delete(id)
-
-  private fun uri(id: Long): URI = ServletUriComponentsBuilder
-    .fromCurrentRequest()
-    .path("/{id}")
-    .buildAndExpand(id)
-    .toUri()
-
-
 }
