@@ -1,11 +1,14 @@
 package org.gabriel.carrosapi.domain.dto
 
+import org.gabriel.carrosapi.config.NoArg
+
 /**
  * @project carros-api-kt
  * @author daohn on 31/01/2021
  */
+@NoArg
 data class CarroDTO(
-  val id: Long,
-  val nome: String,
-  val tipo: String,
+  var id: Long,
+  var nome: String,
+  var tipo: String,
 )
