@@ -14,47 +14,40 @@ import javax.persistence.EntityNotFoundException
  */
 @Service
 class CarroService(private val repository: CarroRepository, private val modelMapper: ModelMapper) {
-
-  fun findAll(): List<CarroDTO> = repository.findAll().map {
-    modelMapper.map(
-      it, CarroDTO::class.java
-    )
-  }
+  fun findAll(): List<CarroDTO> = repository.findAll().map(this::buildCarroDTO)
 
   fun findById(id: Long): Optional<CarroDTO> = repository.findById(id).map {
-    modelMapper.map(
-      it,
-      CarroDTO::class.java
-    )
+    buildCarroDTO(it)
   }
 
 
-  fun findByTipo(tipo: String): List<CarroDTO> = repository.findByTipo(tipo).map {
-    modelMapper.map(
-      it, CarroDTO::class.java
-    )
-  }
+  fun findByTipo(tipo: String): List<CarroDTO> = repository.findByTipo(tipo).map(this::buildCarroDTO)
 
   fun save(carro: Carro): CarroDTO {
-    if(carro.id != null) throw IllegalStateException("Não foi possível salvar o registro")
+    if (carro.id != null) throw IllegalStateException("Não foi possível salvar o registro")
     repository.save(carro)
-    return modelMapper.map(carro, CarroDTO::class.java)
+    return buildCarroDTO(carro)
   }
 
-  fun update(id: Long?, carro: Carro): CarroDTO {
+  fun update(id: Long?, carro: Carro): CarroDTO? {
     if (id == null) throw IllegalStateException("Não foi possível atualizar o registro")
 
-    val target = repository.findById(id).map {
-      it.id = id
-      it.nome = carro.nome
-      it.tipo = carro.tipo
+    val carroOptional = repository.findById(id)
 
-      return@map it
-    }.orElseThrow { EntityNotFoundException("O carro não foi encontrado") }
+    return if (carroOptional.isPresent) {
+      val target = carroOptional.get()
+      target.apply {
+        this.id = id
+        this.nome = carro.nome
+        this.tipo = carro.tipo
+      }
+      repository.save(target)
 
-    repository.save(target)
+      buildCarroDTO(target)
+    } else {
+      null
+    }
 
-    return modelMapper.map(target, CarroDTO::class.java)
   }
 
   fun delete(id: Long) {
@@ -64,5 +57,7 @@ class CarroService(private val repository: CarroRepository, private val modelMap
       throw EntityNotFoundException("O carro de id $id não existe")
     }
   }
+
+  private fun buildCarroDTO(carro: Carro): CarroDTO = modelMapper.map(carro, CarroDTO::class.java)
 
 }
