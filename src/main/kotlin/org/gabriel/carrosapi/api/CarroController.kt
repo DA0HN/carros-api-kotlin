@@ -51,7 +51,10 @@ class CarroController(val service: CarroService) {
   }
 
   @PutMapping("/{id}")
-  fun update(@PathVariable id: Long, @RequestBody carro: Carro) = service.update(id, carro)
+  fun update(@PathVariable id: Long, @RequestBody carro: Carro): ResponseEntity<CarroDTO> {
+    val carroDTO = service.update(id, carro)
+    return if (carroDTO != null) ResponseEntity.ok(carroDTO) else ResponseEntity.notFound().build()
+  }
 
   @DeleteMapping("/{id}")
   fun delete(@PathVariable id: Long) = service.delete(id)
