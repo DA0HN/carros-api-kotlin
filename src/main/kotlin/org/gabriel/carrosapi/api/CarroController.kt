@@ -5,9 +5,7 @@ import org.gabriel.carrosapi.domain.model.Carro
 import org.gabriel.carrosapi.domain.service.CarroService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder
 import org.springframework.web.util.UriComponentsBuilder
-import java.net.URI
 
 /**
  * @project carros-api-kt
@@ -57,5 +55,8 @@ class CarroController(val service: CarroService) {
   }
 
   @DeleteMapping("/{id}")
-  fun delete(@PathVariable id: Long) = service.delete(id)
+  fun delete(@PathVariable id: Long): ResponseEntity<Any> {
+    val isDeleted = service.delete(id)
+    return if (isDeleted) ResponseEntity.ok().build() else ResponseEntity.notFound().build()
+  }
 }
