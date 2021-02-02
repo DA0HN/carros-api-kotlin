@@ -21,7 +21,8 @@ class CarroService(private val repository: CarroRepository, private val modelMap
   }
 
 
-  fun findByTipo(tipo: String): List<CarroDTO> = repository.findByTipo(tipo).map(this::buildCarroDTO)
+  fun findByTipo(tipo: String): List<CarroDTO> =
+    repository.findByTipo(tipo).map(this::buildCarroDTO)
 
   fun save(carro: Carro): CarroDTO {
     if (carro.id != null) throw IllegalStateException("Não foi possível salvar o registro")
@@ -50,14 +51,7 @@ class CarroService(private val repository: CarroRepository, private val modelMap
 
   }
 
-  fun delete(id: Long): Boolean {
-    return if (repository.existsById(id)) {
-      repository.deleteById(id)
-      true
-    } else {
-      false
-    }
-  }
+  fun delete(id: Long) = repository.deleteById(id)
 
   private fun buildCarroDTO(carro: Carro): CarroDTO = modelMapper.map(carro, CarroDTO::class.java)
 

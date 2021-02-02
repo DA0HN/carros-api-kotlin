@@ -39,13 +39,9 @@ class CarroController(val service: CarroService) {
     @RequestBody carro: Carro,
     uriComponentsBuilder: UriComponentsBuilder
   ): ResponseEntity<CarroDTO> {
-    return try {
-      val carroDTO = service.save(carro)
-      val uri = uriComponentsBuilder.path("api/v1/carros/{id}").buildAndExpand(carroDTO.id).toUri()
-      ResponseEntity.created(uri).body(carroDTO)
-    } catch (ex: Exception) {
-      ResponseEntity.badRequest().build()
-    }
+    val carroDTO = service.save(carro)
+    val uri = uriComponentsBuilder.path("api/v1/carros/{id}").buildAndExpand(carroDTO.id).toUri()
+    return ResponseEntity.created(uri).body(carroDTO)
   }
 
   @PutMapping("/{id}")
@@ -56,7 +52,7 @@ class CarroController(val service: CarroService) {
 
   @DeleteMapping("/{id}")
   fun delete(@PathVariable id: Long): ResponseEntity<Any> {
-    val isDeleted = service.delete(id)
-    return if (isDeleted) ResponseEntity.ok().build() else ResponseEntity.notFound().build()
+    service.delete(id)
+    return ResponseEntity.ok().build()
   }
 }
