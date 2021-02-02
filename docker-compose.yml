@@ -1,0 +1,22 @@
+version: '3.8'
+services:
+  database:
+    container_name: db-carros
+    image: org.gabriel.carrosapi/db-carros
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: db-carros
+    ports:
+      - '35435:5432'
+    volumes:
+      - db-carros-volume:/var/lib/postgresql/data
+    restart: always
+    networks:
+      - postgres
+networks:
+  postgres:
+    driver: bridge
+volumes:
+  db-carros-volume:
+    external: true
