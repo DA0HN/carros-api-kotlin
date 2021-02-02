@@ -57,5 +57,8 @@ class CarroController(val service: CarroService) {
   }
 
   @DeleteMapping("/{id}")
-  fun delete(@PathVariable id: Long) = service.delete(id)
+  fun delete(@PathVariable id: Long): ResponseEntity<Any> {
+    val isDeleted = service.delete(id)
+    return if (isDeleted) ResponseEntity.ok().build() else ResponseEntity.notFound().build()
+  }
 }

@@ -50,11 +50,12 @@ class CarroService(private val repository: CarroRepository, private val modelMap
 
   }
 
-  fun delete(id: Long) {
-    if (repository.existsById(id)) {
+  fun delete(id: Long): Boolean {
+    return if (repository.existsById(id)) {
       repository.deleteById(id)
+      true
     } else {
-      throw EntityNotFoundException("O carro de id $id não existe")
+      false
     }
   }
 
