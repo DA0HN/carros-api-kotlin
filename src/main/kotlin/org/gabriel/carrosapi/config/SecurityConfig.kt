@@ -1,9 +1,12 @@
 package org.gabriel.carrosapi.config
 
 import org.springframework.context.annotation.Configuration
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 
 /**
  * @project carros-api-kt
@@ -11,6 +14,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
  */
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(securedEnabled = true)
 class SecurityConfig : WebSecurityConfigurerAdapter() {
 
   override fun configure(http: HttpSecurity) {
@@ -18,9 +22,23 @@ class SecurityConfig : WebSecurityConfigurerAdapter() {
       .authorizeRequests()
       .anyRequest().authenticated()
       .and()
-        .httpBasic()
+      .httpBasic()
       .and()
-        .csrf().disable()
+      .csrf().disable()
   }
 
+  override fun configure(auth: AuthenticationManagerBuilder) {
+
+    val encoder = BCryptPasswordEncoder()
+
+    auth.inMemoryAuthentication()
+      .passwordEncoder(encoder)
+        .withUser("user")
+        .password(encoder.encode("user"))
+        .roles("USER")
+      .and()
+        .withUser("admin")
+        .password(encoder.encode("admin"))
+        .roles("ADMIN", "USER")
+  }
 }
