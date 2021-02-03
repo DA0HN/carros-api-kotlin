@@ -23,8 +23,7 @@ class CarroController(val service: CarroService) {
   @GetMapping("/{id}")
   fun findById(@PathVariable("id") id: Long): ResponseEntity<CarroDTO> {
     val carro = service.findById(id)
-
-    return carro.map { ResponseEntity.ok(it) }.orElse(ResponseEntity.notFound().build())
+    return ResponseEntity.ok(carro)
   }
 
   @GetMapping("/tipo/{tipo}")
