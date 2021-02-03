@@ -18,7 +18,9 @@ class SecurityConfig : WebSecurityConfigurerAdapter() {
       .authorizeRequests()
       .anyRequest().authenticated()
       .and()
-      .httpBasic()
+        .httpBasic()
+      .and()
+        .csrf().disable()
   }
 
 }
