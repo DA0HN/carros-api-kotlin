@@ -1,32 +1,29 @@
 package org.gabriel.carrosapi.domain.service
 
-import org.springframework.security.core.userdetails.User
+import org.gabriel.carrosapi.domain.repository.UserRepository
+import org.springframework.security.core.userdetails.User as UserDetail
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
+import kotlin.jvm.Throws
 
 /**
  * @project carros-api-kt
  * @author daohn on 03/02/2021
  */
 @Service("userDetailsService")
-class UserDetailsServiceImpl(val encoder: BCryptPasswordEncoder) : UserDetailsService {
-
+class UserDetailsServiceImpl(val repository: UserRepository) : UserDetailsService {
+  @Throws(UsernameNotFoundException::class)
   override fun loadUserByUsername(username: String): UserDetails {
-    if(username == "user") {
-      return User.withUsername(username)
-        .password(encoder.encode("user"))
-        .roles("USER")
-        .build()
-    }
-    else if(username == "admin") {
-      return User.withUsername(username)
-        .password(encoder.encode("admin"))
-        .roles("USER", "ADMIN")
-        .build()
-    }
-    throw UsernameNotFoundException("Usuário não encontrado")
+    val user = repository
+      .findByLogin(username)
+      .orElseThrow { UsernameNotFoundException("Usuário não encontrado") }
+    return UserDetail
+      .withUsername(user.login)
+      .password(user.senha)
+      .roles("USER")
+      .build()
   }
 }
