@@ -17,13 +17,8 @@ import kotlin.jvm.Throws
 class UserDetailsServiceImpl(val repository: UserRepository) : UserDetailsService {
   @Throws(UsernameNotFoundException::class)
   override fun loadUserByUsername(username: String): UserDetails {
-    val user = repository
+    return repository
       .findByLogin(username)
       .orElseThrow { UsernameNotFoundException("Usuário não encontrado") }
-    return UserDetail
-      .withUsername(user.login)
-      .password(user.senha)
-      .roles("USER")
-      .build()
   }
 }
