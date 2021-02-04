@@ -4,6 +4,7 @@ import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.security.access.AccessDeniedException
 import org.springframework.web.HttpRequestMethodNotSupportedException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
@@ -26,6 +27,19 @@ class ExceptionHandler : ResponseEntityExceptionHandler() {
   @ExceptionHandler(IllegalArgumentException::class, IllegalStateException::class)
   fun errorBadRequest(exception: Exception): ResponseEntity<Any> {
     return ResponseEntity.badRequest().build()
+  }
+
+  @ExceptionHandler(AccessDeniedException::class)
+  fun errorForbidden(exception: Exception, request: WebRequest): ResponseEntity<Any> {
+    return ResponseEntity.status(HttpStatus.FORBIDDEN).body(
+      DefaultErrorMessage(
+        System.currentTimeMillis(),
+        HttpStatus.FORBIDDEN.value(),
+        HttpStatus.FORBIDDEN.name,
+        "Acesso negado",
+        (request as ServletWebRequest).request.requestURI,
+      )
+    )
   }
 
   override fun handleHttpRequestMethodNotSupported(
@@ -51,4 +65,5 @@ class ExceptionHandler : ResponseEntityExceptionHandler() {
         )
       )
   }
+
 }

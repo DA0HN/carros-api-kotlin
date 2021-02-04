@@ -4,6 +4,7 @@ import org.gabriel.carrosapi.domain.dto.CarroDTO
 import org.gabriel.carrosapi.domain.model.Carro
 import org.gabriel.carrosapi.domain.service.CarroService
 import org.springframework.http.ResponseEntity
+import org.springframework.security.access.annotation.Secured
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.util.UriComponentsBuilder
 
@@ -34,6 +35,7 @@ class CarroController(val service: CarroService) {
   }
 
   @PostMapping
+  @Secured("ROLE_ADMIN")
   fun save(
     @RequestBody carro: Carro,
     uriComponentsBuilder: UriComponentsBuilder
