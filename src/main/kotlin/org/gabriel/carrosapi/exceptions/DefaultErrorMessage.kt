@@ -1,5 +1,6 @@
 package org.gabriel.carrosapi.exceptions
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import java.io.Serializable
 
 /**
@@ -11,5 +12,6 @@ data class DefaultErrorMessage(
   val message: String, val path: String,
 ) :
   Serializable {
-    private val serialVersionUID = 1L
-  }
+  private val serialVersionUID = 1L
+  fun toJson(): String = ObjectMapper().writeValueAsString(this)
+}
