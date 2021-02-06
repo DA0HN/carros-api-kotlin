@@ -1,5 +1,6 @@
 package org.gabriel.carrosapi.api
 
+import org.springframework.security.access.annotation.Secured
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.web.bind.annotation.GetMapping
@@ -14,9 +15,7 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/")
 class IndexController {
 
-  @GetMapping
-  fun hello() = "API dos Carros"
-
+  @Secured("ROLE_ADMIN", "ROLE_USER")
   @GetMapping("/userInfo")
   fun userInfo(@AuthenticationPrincipal user: UserDetails) = user
 }

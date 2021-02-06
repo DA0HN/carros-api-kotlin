@@ -16,17 +16,20 @@ import org.springframework.web.util.UriComponentsBuilder
 @RequestMapping("api/v1/carros")
 class CarroController(val service: CarroService) {
 
+  @Secured("ROLE_USER")
   @GetMapping
   fun findAll(): ResponseEntity<List<CarroDTO>> {
     return ResponseEntity.ok(service.findAll())
   }
 
+  @Secured("ROLE_USER")
   @GetMapping("/{id}")
   fun findById(@PathVariable("id") id: Long): ResponseEntity<CarroDTO> {
     val carro = service.findById(id)
     return ResponseEntity.ok(carro)
   }
 
+  @Secured("ROLE_USER")
   @GetMapping("/tipo/{tipo}")
   fun findByTipo(@PathVariable("tipo") tipo: String): ResponseEntity<List<CarroDTO>> {
     val carros = service.findByTipo(tipo)
@@ -45,12 +48,14 @@ class CarroController(val service: CarroService) {
     return ResponseEntity.created(uri).body(carroDTO)
   }
 
+  @Secured("ROLE_ADMIN")
   @PutMapping("/{id}")
   fun update(@PathVariable id: Long, @RequestBody carro: Carro): ResponseEntity<CarroDTO> {
     val carroDTO = service.update(id, carro)
     return if (carroDTO != null) ResponseEntity.ok(carroDTO) else ResponseEntity.notFound().build()
   }
 
+  @Secured("ROLE_ADMIN")
   @DeleteMapping("/{id}")
   fun delete(@PathVariable id: Long): ResponseEntity<Any> {
     service.delete(id)
