@@ -32,10 +32,17 @@ class SecurityConfig(
   val unauthorizedHandler: UnauthorizedHandler,
 ) : WebSecurityConfigurerAdapter() {
 
+  private val publicResourcesALL = arrayOf<String>()
+
+  private val publicResourcesGET = arrayOf(
+    "/api/v1/login/**",
+  )
+
   override fun configure(http: HttpSecurity) {
     http
       .authorizeRequests()
-      .antMatchers(HttpMethod.GET, "/api/v1/login").permitAll()
+      .antMatchers(HttpMethod.GET, *publicResourcesGET).permitAll()
+      .antMatchers(*publicResourcesALL).permitAll()
       .anyRequest().authenticated()
       .and().csrf().disable()
       .addFilter(JWTAuthenticationFilter(authenticationManager(), jwtUtil, modelMapper))
